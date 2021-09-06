@@ -12,7 +12,7 @@ setup(
     description='',
     packages=['aiotor'],
     include_package_data=True,
-
+    data_files=data_files,
     install_requires=[
         'aiosocks',
         'socks',

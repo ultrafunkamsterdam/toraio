@@ -1,1 +1,1 @@
-recursive-include aiotor/bin *.*
+recursive-include toraio/bin *.*

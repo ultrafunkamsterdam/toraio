@@ -1,4 +1,0 @@
-aiosocks
-socks
-aiohttp
-stem

@@ -1,1 +1,1 @@
-recursive-include toraio/bin *.*
+graft toraio

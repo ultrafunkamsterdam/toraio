@@ -43,7 +43,7 @@ setup(
     packages=['toraio'],
     include_package_data=True,
     install_requires=[
-        'socks',
+        'pysocks',
         'aiohttp',
         'aiosocks2',
         'stem',

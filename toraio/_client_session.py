@@ -1,4 +1,4 @@
-import aiosocks.connector
+import aiosocks2.connector
 import aiohttp
 import logging
 
@@ -23,11 +23,11 @@ class ClientSession(aiohttp.ClientSession):
         if not kw["headers"].get("user-agent"):
             kw["headers"]["user-agent"] = UA.GENERIC_WEBKIT
         super().__init__(
-            connector=aiosocks.connector.ProxyConnector(
+            connector=aiosocks2.connector.ProxyConnector(
                 ssl=False,
                 remote_resolve=True,
             ),
-            request_class=aiosocks.connector.ProxyClientRequest,
+            request_class=aiosocks2.connector.ProxyClientRequest,
             **kw,
         )
         self.pool = pool

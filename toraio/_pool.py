@@ -9,7 +9,7 @@ from collections import deque
 import weakref
 
 
-import aiosocks.connector
+import aiosocks2.connector
 import socks
 import tempfile
 import shutil
@@ -253,12 +253,12 @@ class Pool(object):
     async def open_connection(self, host, port, remote_resolve=True, **kw):
         proxy = next(self)
         logging.getLogger(str(proxy)).debug("open_connection %s : %d " % (host, port))
-        return await aiosocks.open_connection(
+        return await aiosocks2.open_connection(
             proxy, None, dst=(host, port), remote_resolve=remote_resolve, **kw
         )
 
 
-class Socks5Proxy(aiosocks.Socks5Addr):
+class Socks5Proxy(aiosocks2.Socks5Addr):
     @property
     def url(self):
         return f"socks5://{self.host}:{self.port}"

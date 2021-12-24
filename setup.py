@@ -29,7 +29,7 @@ class postinstall(install):
 
 setup(
     name='toraio',
-    version='1.0.7',
+    version='1.0.9',
     url='https://github.com/ultrafunkamsterdam/toraio',
     license='MIT',
     author='UltrafunkAmsterdam',

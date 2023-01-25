@@ -11,12 +11,12 @@
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
 ▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒
 
-Aiotor - a pool of proxies, shifting on each request
+toraio - a pool of proxies, shifting on each request
 ======================
 
 What?
 ----
-using aiotor you can easily create a small pool of
+using toraio you can easily create a small pool of
 tor proxies so you can take advantage of having multiple 
 circuits at your disposal and multiple ip addresses, while
 running just 1 process. It also brings a ClientSession, which
@@ -26,7 +26,7 @@ it shifts proxies at every request.
 
 Does it work for **requests** package? and **urllib**? and plain **sockets** ?
 -----
-yes! aitor.Pool() is a context manager which, while in context, patches
+yes! toraio.Pool() is a context manager which, while in context, patches
 the low level socket library, so it's usage is easy and compatible for almost 
 all setups/libraries.
 
@@ -43,7 +43,7 @@ using a dedicated folder will greatly improve loading time on next runs.
 It is blocking!
 ----
 only once!
-aiotor should ideally be started on your mainthread. it will block 
+toraio should ideally be started on your mainthread. it will block 
 to bootstrap the tor connections, and this only happens once during 
 the full lifecycle of your program.
 while subprocesses are supported by asyncio, it would render useless 
@@ -51,7 +51,7 @@ as proxies can't be used anyway, until initialization is finished.
 It also brings a lot of other unexpected behavior.
 
 
-aiotor.Pool is a true singleton. Every Pool() you create
+toraio.Pool is a true singleton. Every Pool() you create
 will refer to the **same** instance. If you need more proxies,
 just use the amount parameter (defaults to 10, which is 
 more than sufficient, and actually too much). 
@@ -67,7 +67,7 @@ Why another library around Onion/Tor?
 ----
 for most people, setting up tor is already quite a task,
 implementing them as proxies in their programs requires much
-more work. the purpose of aiotor is to make it as easy
+more work. the purpose of toraio is to make it as easy
 as it can possibly get. 
 
 Show me how easy it is!
@@ -75,10 +75,10 @@ Show me how easy it is!
 ```python
 import logging
 import asyncio
-import aiotor
+import toraio
 
 async def main():
-    async with aiotor.ClientSession() as session:
+    async with toraio.ClientSession() as session:
         for _ in range(10):
             async with session.get('http://httpbin.org/ip') as response:
                 print ( await response.json() )
@@ -114,25 +114,25 @@ INFO:pool:tor bootstrap 90.0 completed
 INFO:pool:tor bootstrap 95.0 completed
 INFO:pool:tor bootstrap 100.0 completed
 
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '109.70.100.32'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '107.189.31.241'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '89.163.143.8'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '45.153.160.133'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '104.244.75.33'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '199.249.230.187'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '185.220.102.245'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '213.61.215.54'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '193.189.100.199'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '176.10.99.200'}
 
 ```
@@ -146,43 +146,43 @@ asyncio.run(main())
 # no initialization is done
 # it returns immediately 
 
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '109.70.100.32'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '107.189.31.241'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '89.163.143.8'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '45.153.160.133'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '104.244.75.33'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '199.249.230.187'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '185.220.102.245'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '213.61.215.54'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '193.189.100.199'}
-DEBUG:aiotor._client_session:proxy switched
+DEBUG:toraio._client_session:proxy switched
 {'origin': '176.10.99.200'}
 
 ```
 
 Showing different ways to get a pool and showing how to use the pool as context manager
 ```python
-import aiotor
+import toraio
 
-pool = aiotor.start()   # this gives you a running pool
+pool = toraio.start()   # this gives you a running pool
 
-pool2 = aiotor.Pool()   # this gives you the same pool (because singleton) if already bootstrapped
+pool2 = toraio.Pool()   # this gives you the same pool (because singleton) if already bootstrapped
 
 pool2.start()           # will start and bootstrap the pool, if not already running
                         # start() has the pool itself as return value
 
-pool3 = aiotor.Pool.get_instance()  # same story
+pool3 = toraio.Pool.get_instance()  # same story
 
-pool4 = aiotor.start()   # same story
+pool4 = toraio.start()   # same story
 
 
 import requests
